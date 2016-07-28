@@ -5,6 +5,7 @@ use yii\grid\GridView;
 use kartik\select2\Select2;
 use app\models\Profesion;
 use yii\helpers\ArrayHelper;
+use kartik\growl\Growl;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\PersonaSearch */
@@ -12,6 +13,38 @@ use yii\helpers\ArrayHelper;
 
 $this->title = Yii::t('app', 'Personas');
 $this->params['breadcrumbs'][] = $this->title;
+
+if ( Yii::$app->session->getFlash('success') ) {
+    $type = Growl::TYPE_SUCCESS;
+    $title = 'todo OK';
+    $icon = 'glyphicon glyphicon-ok-sign';
+    $body = Yii::$app->session->getFlash('success');
+} elseif ( Yii::$app->session->getFlash('error') ) {
+    $type = Growl::TYPE_DANGER;
+    $title = 'Error';
+    $icon = 'glyphicon glyphicon-remove-sign';
+    $body = Yii::$app->session->getFlash('error');
+}
+
+$flashMessages = Yii::$app->session->getAllFlashes();
+if ($flashMessages) {
+        echo Growl::widget([
+            'type' => $type,
+            'title' => $title,
+            'icon' => $icon,
+            'body' => $body,
+            'showSeparator' => true,
+            'delay' => 0,
+            'pluginOptions' => [
+                'showProgressbar' => true,
+                'placement' => [
+                    'from' => 'top',
+                    'align' => 'right',
+                ],
+                'timer' => 3000,
+            ]
+        ]);
+}
 ?>
 <div class="persona-index">
 

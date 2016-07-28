@@ -3,6 +3,8 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+use kartik\alert\AlertBlock;
+use Yii;
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\ProfesionSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -13,6 +15,15 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="profesion-index">
     
     <?php
+    
+    echo AlertBlock::widget([
+        'type' => AlertBlock::TYPE_ALERT,
+        'useSessionFlash' => true,
+        'delay' => 3000,
+    ]);
+    
+    
+    /*
     $flashMessages = Yii::$app->session->getAllFlashes();
     if ($flashMessages) {
         foreach($flashMessages as $key => $message) {
@@ -22,6 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>";   
         }
     }
+    */
     ?>
 
     <h1><?= Html::encode($this->title) ?></h1>

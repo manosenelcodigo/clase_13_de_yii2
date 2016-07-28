@@ -64,9 +64,24 @@ class PersonaController extends Controller
     public function actionCreate()
     {
         $model = new Persona();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            if ( $model->save() ) {
+                    Yii::$app->session->setFlash('success','Registro almacenado correctamente');
+                } else {
+                    //Yii::$app->session->setFlash('danger','El registro no fue almacenado');
+                    
+                    $errores = "";
+                    
+                    foreach ( $model->getErrors() as $key => $value ) {
+                        foreach ( $value as $row => $field ) {
+                            $errores .= $field . "<br>";
+                        }
+                    }
+                    
+                    Yii::$app->session->setFlash('error',$errores);
+                }
+                
+            return $this->redirect(['index']);
         } else {
             return $this->render('create', [
                 'model' => $model,

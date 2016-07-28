@@ -23,26 +23,6 @@ class ProfesionController extends Controller
     public function behaviors()
     {
         return [
-            'access' => [
-                'class' => AccessControl::className(),
-                //'only'  => ['index'],
-                /*
-                 * ? para usuario invitado
-                 * @ para usuarios logueados
-                 */
-                'rules' => [
-                    [
-                        'actions'   => ['index'],
-                        'allow'     => true,
-                        'roles'     => ['?','@']
-                    ],
-                    [
-                        'actions'   => ['create', 'update'],
-                        'allow'     => false,
-                        'roles'     => ['@']
-                    ]
-                ]
-            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -103,12 +83,26 @@ class ProfesionController extends Controller
             $model->updated_by = Yii::$app->user->id;
             $model->updated_at = new Expression("NOW()");
             */
-            if ( !$model->save() ) {
-                print_r($model->getErrors());
-                exit;
+            
+            //$model->updated_by = "jonathan";
+            
+            if ( $model->save() ) {
+                Yii::$app->session->setFlash('success','Registro almacenado correctamente');
+            } else {
+                //Yii::$app->session->setFlash('danger','El registro no fue almacenado');
+                
+                $errores = "";
+                
+                foreach ( $model->getErrors() as $key => $value ) {
+                    foreach ( $value as $row => $field ) {
+                        $errores .= $field . "<br>";
+                    }
+                }
+                
+                Yii::$app->session->setFlash('error',$errores);
             }
             
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         } else {
             return $this->render('create', [
                 'model' => $model,
